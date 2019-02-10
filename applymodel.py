@@ -14,7 +14,7 @@ config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
 
 # load json and create model
-filePathRoot = 'I:\\Dropbox\\Syracuse\\CIS 663 - Biometrics\\Project\\localrepo\\EmotionEngine\\1549777156.7452652'
+filePathRoot = 'I:\\Dropbox\\Syracuse\\CIS 663 - Biometrics\\Project\\localrepo\\EmotionEngine\\128px 1-channel color (grayscale)'
 json_file = open(filePathRoot + '.json')
 loaded_model_json = json_file.read()
 json_file.close()
@@ -61,9 +61,9 @@ while True:
 
         # crop image
         croppedImage = grayImage[y:y + h, x:x + w].copy()
-        croppedImage = cv2.resize(croppedImage, (48, 48))
+        croppedImage = cv2.resize(croppedImage, (128, 128))
         #put color back in for classifier (TODO: make this work on grayscale all the way)
-        croppedImage = cv2.cvtColor(croppedImage, cv2.COLOR_GRAY2BGR)
+        #croppedImage = cv2.cvtColor(croppedImage, cv2.COLOR_GRAY2BGR)
         x = img_to_array(croppedImage)      # numpy array with shape (3, 48, 48)
         x = x.reshape((1,) + x.shape)       # numpy array with shape (1, 3, 48, 48)
         predictedEmotion = loaded_model.predict(x)[0]

@@ -18,7 +18,7 @@ def cropFace(filePath, haarFaceCascade):
 
         #crop image
         croppedImage = grayImage[y:y+h, x:x+w].copy()
-        croppedImage = cv2.resize(croppedImage, (48, 48))
+        croppedImage = cv2.resize(croppedImage, (128, 128))
         return croppedImage
     else:
         print('Unable to find face in ', filePath)
@@ -41,7 +41,7 @@ def cropImages(rootPath, haarFaceCascade):
             print('emotion: ', emotion)
             print('file: ', file)
             filePath = str(os.path.join(rootPath, 'data', str(emotion), str(fileName)))
-            outputPath = str(os.path.join(rootPath, 'croppedData', str(emotion), str(fileName)))
+            outputPath = str(os.path.join(rootPath, 'croppedData128', str(emotion), str(fileName)))
 
             faceImage = cropFace(filePath, haarFaceCascade)
             if faceImage is not None:

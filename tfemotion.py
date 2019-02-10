@@ -7,8 +7,13 @@ from time import time
 from sklearn.model_selection import train_test_split
 from tensorflow.keras import backend as K
 
-dataPath = 'C:\\users\\Doc\\Desktop\\CIS663 Data\\croppedData\\'
-img_width, img_height = 48, 48
+# work around allocation error
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+session = tf.Session(config=config)
+
+dataPath = 'C:\\users\\Doc\\Desktop\\CIS663 Data\\croppedData128\\'
+img_width, img_height = 128, 128
 epochs = 50
 batch_size = 16
 
@@ -22,11 +27,11 @@ batch_size = 16
 #                              fill_mode='nearest')
 datagen = ImageDataGenerator(validation_split=0.2, rescale=1. / 255)
 
-train_generator = datagen.flow_from_directory(directory=dataPath, target_size=(48,48), batch_size=batch_size, subset='training')
+train_generator = datagen.flow_from_directory(directory=dataPath, color_mode='grayscale', target_size=(img_width,img_height), batch_size=batch_size, subset='training')
 
-validation_generator = datagen.flow_from_directory(directory=dataPath, target_size=(48,48), batch_size=batch_size, subset='validation')
+validation_generator = datagen.flow_from_directory(directory=dataPath, color_mode='grayscale', target_size=(img_width,img_height), batch_size=batch_size, subset='validation')
 
-input_shape = (img_width, img_height, 3)
+input_shape = (img_width, img_height, 1)
 
 model = Sequential()
 model.add(Conv2D(32, (3, 3), input_shape=input_shape))
@@ -54,7 +59,8 @@ model.compile(loss='binary_crossentropy',
 
 print(model.summary())
 
-logName = time()
+#logName = time()
+logName = '128px 1-channel color (grayscale)'
 tensorboard = TensorBoard(log_dir="logs/{}".format(logName), write_graph=True, write_images=True, histogram_freq=1)
 
 model.fit_generator(
