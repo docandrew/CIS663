@@ -10,8 +10,16 @@ from keras.models import model_from_json
 from keras.optimizers import *
 from keras.layers.normalization import BatchNormalization
 
+#--------------------------------------------------------
+#import tensorflow as tf
+#work around allocation error
+#config = tf.ConfigProto()
+#config.gpu_options.allow_growth = True
+#session = tf.Session(config=config)
+#--------------------------------------------------------
+
 batch_size = 128
-epochs = 20
+epochs = 30
 
 X_Train, Y_Train, num_class = dataHelper.getTrainData()
 X_Test, Y_Test = dataHelper.getTestData()
@@ -26,28 +34,35 @@ def baseline_model():
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.30))
 
     # 2nd Convolution layer
     model.add(Conv2D(128,(5,5), padding='same'))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.30))
 
     # 3rd Convolution layer
     model.add(Conv2D(512,(3,3), padding='same'))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.30))
 
     # 4th Convolution layer
     model.add(Conv2D(512,(3,3), padding='same'))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.30))
+
+    # 5th Convolution layer
+    #model.add(Conv2D(512,(3,3), padding='same'))
+    #model.add(BatchNormalization())
+    #model.add(Activation('relu'))
+    #model.add(MaxPooling2D(pool_size=(2, 2)))
+    #model.add(Dropout(0.30))
 
     # Flattening
     model.add(Flatten())
@@ -56,13 +71,19 @@ def baseline_model():
     model.add(Dense(256))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.30))
 
     # Fully connected layer 2nd layer
     model.add(Dense(512))
     model.add(BatchNormalization())
     model.add(Activation('relu'))
-    model.add(Dropout(0.25))
+    model.add(Dropout(0.30))
+
+    # Fully connected layer 3rd layer
+    #model.add(Dense(512))
+    #model.add(BatchNormalization())
+    #model.add(Activation('relu'))
+    #model.add(Dropout(0.30))
 
     model.add(Dense(num_class, activation='sigmoid'))
 
@@ -78,7 +99,11 @@ def baseline_model_saved():
     model = model_from_json(loaded_model_json)
     #load weights from h5 file
     model.load_weights("model_4layer_2_2_pool.h5")
-    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=[categorical_accuracy])
+
+    adam = optimizers.Adam(lr=0.01, beta_1 = 0.9, beta_2 = 0.999, epsilon = None, decay=0.0, amsgrad = False)
+    model.compile(optimizer=adam, loss='binary_crossentropy', metrics=[categorical_accuracy])
+
+    #model.compile(optimizer='adam', loss='binary_crossentropy', metrics=[categorical_accuracy])
     return model
 
 is_model_saved = False

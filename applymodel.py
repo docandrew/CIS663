@@ -14,7 +14,7 @@ config.gpu_options.allow_growth = True
 session = tf.Session(config=config)
 
 # load json and create model
-filePathRoot = 'I:\\Dropbox\\Syracuse\\CIS 663 - Biometrics\\Project\\localrepo\\EmotionEngine\\128px 1-channel color (grayscale)'
+filePathRoot = 'I:\\Dropbox\\Syracuse\\CIS 663 - Biometrics\\Project\\localrepo\\EmotionEngine\\17_February_2019_01_28'
 json_file = open(filePathRoot + '.json')
 loaded_model_json = json_file.read()
 json_file.close()
