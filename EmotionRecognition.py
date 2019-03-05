@@ -1,14 +1,14 @@
 import DataCollector as dataHelper
 import numpy as np
-from keras.models import Sequential
-from keras.layers import Dense , Activation , Dropout ,Flatten
-from keras.layers.convolutional import Conv2D
-from keras.layers.convolutional import MaxPooling2D
-from keras.metrics import categorical_accuracy
-from keras.models import model_from_json
-
-from keras.optimizers import *
-from keras.layers.normalization import BatchNormalization
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense , Activation , Dropout ,Flatten
+from tensorflow.keras.layers import Conv2D
+from tensorflow.keras.layers import MaxPooling2D
+from tensorflow.keras.metrics import categorical_accuracy
+from tensorflow.keras.models import model_from_json
+from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.optimizers import *
+from tensorflow.keras.layers import BatchNormalization
 
 #--------------------------------------------------------
 #import tensorflow as tf
@@ -114,16 +114,19 @@ if(is_model_saved==False ):
     model = baseline_model()
     # Note : 3259 samples is used as validation data &   28,709  as training samples
 
+    tensorboard = TensorBoard(log_dir="logs/model_4layer_2_2", write_graph=True, write_images=True, histogram_freq=1)
+
     model.fit(X_Train, Y_Train,
               batch_size=batch_size,
               epochs=epochs,
               verbose=1,
-              validation_split=0.1111)
+              validation_split=0.1111,
+              callbacks=[tensorboard])
     model_json = model.to_json()
-    with open("model_4layer_2_2_pool.json", "w") as json_file:
+    with open("model_4layer_2_2_pool_jon.json", "w") as json_file:
         json_file.write(model_json)
     # serialize weights to HDF5
-    model.save_weights("model_4layer_2_2_pool.h5")
+    model.save_weights("model_4layer_2_2_pool_jon.h5")
     print("Saved model to disk")
 else:
     # Load the trained model
